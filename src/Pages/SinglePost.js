@@ -8,7 +8,7 @@ export default function SinglePost() {
         <div style={{marginTop:'43px'}}>
             <Grid container spacing={2} style={{padding: '15px'}}>
                 <Grid  item md={9} xs={12} spacing={3}>
-                    <div><img src='./2.jpg' alt="singlepost" style={{width:'100%',height:'500px'}}/></div>
+                    <div><img src='/2.jpg' alt="singlepost" style={{width:'100%',height:'500px'}}/></div>
                     <Grid container  style={{marginTop:'10px'}}>
                             <Grid item md={10} xs={10} style={{textAlign:'center'}}>
                                 <Typography variant="h4" component="div">Lorem Ipsum is simply dummy text</Typography>

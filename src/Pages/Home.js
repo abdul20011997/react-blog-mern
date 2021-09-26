@@ -1,5 +1,6 @@
 import { Card, Grid ,Avatar,CardHeader,CardMedia,CardContent,Typography,CardActions,Button} from '@mui/material';
 import React from 'react'
+import { Link } from 'react-router-dom';
 import Header from "../Header/Header";
 import Sidebar from "../Sidebar/Sidebar";
 
@@ -11,6 +12,7 @@ export default function Home() {
             <Grid container spacing={2} style={{padding: '15px'}}>
                 <Grid container item md={8} xs={12} spacing={3}>
                     <Grid item md={6} xs={12}>
+                        <Link to='/singlepost/abcd' style={{textDecoration:'none'}}>
                             <Card>
                             <CardHeader
                                     avatar={
@@ -39,6 +41,7 @@ export default function Home() {
                                 </CardActions>
 
                             </Card>
+                        </Link>
                     </Grid>
                     <Grid item md={6} xs={12}>
                             <Card>

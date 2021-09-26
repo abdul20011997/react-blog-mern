@@ -8,6 +8,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import { deepOrange } from '@mui/material/colors';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import { Link } from 'react-router-dom';
 const useStyle=makeStyles({
     mainlist:{
         display:'flex',
@@ -32,6 +33,7 @@ const useStyle=makeStyles({
 
 })
 export default function Topbar() {
+    const user=false;
     const [anchorEl,setanchorEl]=useState(null);
     const open=Boolean(anchorEl)
     const handleOpen=(e)=>{
@@ -52,10 +54,13 @@ export default function Topbar() {
                  <IconButton><InstagramIcon size="large"/></IconButton> 
                  <IconButton><WhatsAppIcon size="large"/></IconButton> 
                  <Box className={classes.mainlist}>                
-                      <Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>HOME</Typography>
+                      <Link to="/" style={{textDecoration:'none'}}><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>HOME</Typography></Link>
                       <Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>BLOG</Typography>
-                      <Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>WRITE</Typography>
+                      <Link to="/write" style={{textDecoration:'none'}}><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>WRITE</Typography></Link>
+                      {user ?
                       <Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>LOGOUT</Typography>
+                       :<><Link to="/register" style={{textDecoration:'none'}}><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>REGISTER</Typography></Link><Link style={{textDecoration:'none'}} to="/login"><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>LOGIN</Typography></Link></>          
+                      }
                 </Box>
                   <Button style={{marginLeft:'10px',fontWeight:'bold'}} color="secondary" size="large" onClick={handleOpen}>Abdul</Button>
                   <Menu anchorEl={anchorEl} open={open}  onClose={handleClose}>
