@@ -33,7 +33,7 @@ const useStyle=makeStyles({
 
 })
 export default function Topbar() {
-    const user=false;
+    const user=true;
     const [anchorEl,setanchorEl]=useState(null);
     const open=Boolean(anchorEl)
     const handleOpen=(e)=>{
@@ -62,11 +62,12 @@ export default function Topbar() {
                        :<><Link to="/register" style={{textDecoration:'none'}}><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>REGISTER</Typography></Link><Link style={{textDecoration:'none'}} to="/login"><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>LOGIN</Typography></Link></>          
                       }
                 </Box>
-                  <Button style={{marginLeft:'10px',fontWeight:'bold'}} color="secondary" size="large" onClick={handleOpen}>Abdul</Button>
+                {user ?
+                  <><Button style={{marginLeft:'10px',fontWeight:'bold'}} color="secondary" size="large" onClick={handleOpen}>Abdul</Button>
                   <Menu anchorEl={anchorEl} open={open}  onClose={handleClose}>
                       <MenuItem>
                       <ListItemIcon><SettingsRoundedIcon size="small"/></ListItemIcon>
-                      Profile
+                      <Link to="/profile" style={{textDecoration:'none',color:'inherit'}}>Profile</Link>
                       </MenuItem>
                       <MenuItem>
                       <ListItemIcon><LogoutRoundedIcon size="small"/></ListItemIcon>
@@ -74,6 +75,9 @@ export default function Topbar() {
                       </MenuItem>
                   </Menu>
                   <Avatar style={{background:deepOrange[500]}} onClick={handleOpen}>A</Avatar>
+                  </>
+                  : ''
+                }
           </Toolbar>
         </AppBar><div>
             Top Bars
