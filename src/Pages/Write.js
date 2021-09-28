@@ -1,17 +1,9 @@
 import React from 'react'
 import {  TextField,Button,Input,Typography} from '@mui/material';
-import { makeStyles} from '@mui/styles';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-const useStyle=makeStyles({
-    field:{
-        marginTop:'20',
-        maginBottom:'20',
-        display:'block'
-    }
-})
+
 export default function Write() {
-    const classes=useStyle();
     return (
         <div style={{marginTop:'60px',marginLeft:'25px',padding:'10px'}}>
             <Typography variant="h4" component="div" color="secondary">Create Post</Typography>
