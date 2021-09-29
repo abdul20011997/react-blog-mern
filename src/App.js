@@ -11,7 +11,7 @@ import Profile from "./Pages/Profile/Profile";
 
 import { BrowserRouter,Route } from "react-router-dom";
 function App() {
-const user=true;
+const user=false;
   return (
     <div>
       <BrowserRouter>
