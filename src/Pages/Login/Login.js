@@ -4,6 +4,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link,useHistory} from 'react-router-dom';
 import { green } from '@mui/material/colors';
+import Validator from "../../Error/Error";
 
 export default function Login() {
     const [email,setEmail]=useState('');
@@ -12,6 +13,10 @@ export default function Login() {
     const history=useHistory();
     const [password,setPassword]=useState('');
     const [showpassword,setshowPassword]=useState(false);
+    const [loadingFetch,setLoadingFetch]=useState(false);
+    const [erremail,setErremail]=useState(false);
+    const [errpassword,setErrpassword]=useState(false);
+
     const handleClickShowPassword=()=>{
         setshowPassword(!showpassword);
     }
@@ -20,14 +25,33 @@ export default function Login() {
     }
     const handleChangePassword=(e)=>{
         // console.log(e.target.value)
-        setPassword(e.target.value)
+        // setPassword(e.target.value)
+        if(e.target.value==''){
+            setErrpassword(true)
+            setLoading(true)
+        }
+        else{
+           setErrpassword(false)
+           setLoading(false)
+           setPassword(e.target.value)
+        }
     }
     const handleEmail=(e)=>{
-        setEmail(e.target.value)
+        // setEmail(e.target.value)
+        if(e.target.value=='' || !e.target.value.includes('@')){
+            setErremail(true)
+            setLoading(true)
+        }
+        else{
+            setErremail(false)
+            setLoading(false)
+            setEmail(e.target.value)
+        }
     }
 
     const login=()=>{
         setLoading(true)
+        setLoadingFetch(true);
         const data={
             email:email,
             password:password
@@ -40,18 +64,26 @@ export default function Login() {
             }
         }).then(res=>{
             setLoading(false);
-            if(res.status!=200){
+            if(res.status==401){
+                throw new Error('Password does not match')
+            }
+            else if(res.status==404){
+                throw new Error('User not found')
+            }
+            else if(res.status==500){
                 throw new Error(res.statusText)
             }
             return res.json()
         }).then(data=>{
             setLoading(false);
+        setLoadingFetch(false);
             if(data.message.username){
                 console.log('under')
                 history.push('/')
             }
         }).catch(err=>{
             setLoading(false)
+        setLoadingFetch(false);
             setError(err.message)
         })
     }
@@ -65,7 +97,7 @@ export default function Login() {
       }}>
             <div style={{width:'30%',margin: 'auto',position:'absolute',top:'30%',left:'34%',borderRadius: '5px',background: '#f7f7f7',padding: '30px',textAlign: 'center'}}>
             <Typography variant="h4" component="div">Login</Typography>
-            <TextField required placeholder="Enter Email" onChange={handleEmail} id="outlined-required" color="primary" label="Email" style={{marginTop:'20px',marginBottom:'20px',display:'block'}} fullWidth/>
+            <TextField required placeholder="Enter Email" error={erremail} helperText={erremail ? 'Kindly enter valid email':''}  onChange={handleEmail} id="outlined-required" color="primary" label="Email" style={{marginTop:'20px',marginBottom:'20px',display:'block'}} fullWidth/>
             <FormControl style={{width:'100%'}} variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password" required>Password</InputLabel>
                 <OutlinedInput placeholder="Enter Password" onChange={handleChangePassword} fullWidth required color="primary" id="outlined-adornment-password"  type={showpassword ? 'text' : 'password'}
@@ -82,10 +114,11 @@ export default function Login() {
                 }
                 label="Password"
                 />
+                {errpassword ? <p className="css-1wc848c-MuiFormHelperText-root" style={{color:'#d32f2f'}}>Kindly enter password</p> : null }
             </FormControl>
             <Box sx={{ m: 1, position: 'relative' }}>
             <Button style={{marginTop:'15px'}} color="success" variant="contained" disabled={loading} onClick={login}>Login</Button>
-                {loading && (
+                {loadingFetch && (
                 <CircularProgress
                     size={24}
                     sx={{
@@ -100,8 +133,8 @@ export default function Login() {
                 )}
             </Box>
             <Link to='register'><Typography style={{textDecoration:'underline',marginTop:'10px',cursor:'pointer'}}variant="subtitle1" color="parimary">Craete New Account</Typography></Link>
-            { error ? <div style={{color: 'red',marginTop: '10px',fontSize: '20px',fontWeight: '600'}}>{error}</div> : null}
-
+            { error ? <Validator severity="error" error={error}/> : null}            
+            
             </div>
         </div>
     )

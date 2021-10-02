@@ -4,12 +4,20 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link,useHistory } from 'react-router-dom';
 import { green } from '@mui/material/colors';
+import Validator from "../../Error/Error";
 export default function Register() {
     const [username,setUsername]=useState('');
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
-    const [loading,setLoading]=useState('');
+    const [loading,setLoading]=useState(true);
+    const [loadingFetch,setLoadingFetch]=useState(false);
+
     const [error,setError]=useState('');
+    const [errusername,setErrusername]=useState(false);
+    const [erremail,setErremail]=useState(false);
+    const [errpassword,setErrpassword]=useState(false);
+
+
     const history=useHistory();
 
     const [showpassword,setshowPassword]=useState(false);
@@ -19,25 +27,51 @@ export default function Register() {
     const handleMouseDownPassword=(e)=>{
         e.preventDefault();
     }
-    const handleChangePassword=(e)=>{
-        // console.log(e.target.value)
-        setPassword(e.target.value)
-    }
     const handleUsername=(e)=>{
-        setUsername(e.target.value)
+        // console.log(e.target.value)
+        if(e.target.value==''){
+            setErrusername(true)
+            setLoading(true)
+        }
+        else{
+            setErrusername(false)
+            setLoading(false)
+            setUsername(e.target.value)
+        }
     }
+
+    const handleChangePassword=(e)=>{
+         if(e.target.value==''){
+             setErrpassword(true)
+             setLoading(true)
+         }
+         else{
+            setErrpassword(false)
+            setLoading(false)
+            setPassword(e.target.value)
+         }
+    }
+
     const handleEmail=(e)=>{
-        setEmail(e.target.value)
+        if(e.target.value=='' || !e.target.value.includes('@')){
+            setErremail(true)
+            setLoading(true)
+        }
+        else{
+            setErremail(false)
+            setLoading(false)
+            setEmail(e.target.value)
+        }
     }
-    
     const register=()=>{
-        setLoading(true);
         const data={
             username:username,
             email:email,
             password:password
         };
         console.log(data);
+        setLoading(true);
+        setLoadingFetch(true);
         fetch('http://localhost:4000/register',{
             method:'POST',
             body:JSON.stringify(data),
@@ -46,7 +80,10 @@ export default function Register() {
             }
         }).then(res=>{
             console.log(res)
-            if(res.status!=200){
+            if(res.status==403){
+                throw new Error('User already exists')
+            }
+            else if(res.status==500){
                 throw new Error(res.statusText)
             }
             return res.json()
@@ -55,25 +92,32 @@ export default function Register() {
                 history.push('/login');
             }
             setLoading(false)
+            setLoadingFetch(false)
+
         }).catch(err=>{
             setError(err.message)
             setLoading(false)
+            setLoadingFetch(false)
+
         })
     }
+
     return (
+        
         <div style={{background:"url(" + "./4.jpg"+ ")",
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         height:'100vh',
         backgroundPosition: 'center'
       }}>
+
             <div style={{width:'30%',margin: 'auto',position:'absolute',top:'30%',left:'34%',borderRadius: '5px',background: '#f7f7f7',padding: '30px',textAlign: 'center'}}>
             <Typography variant="h4" component="div">Register</Typography>
-            <TextField required placeholder="Enter Username" onChange={handleUsername} id="outlined-required" color="primary" label="Username" style={{marginTop:'20px',marginBottom:'20px',display:'block'}} fullWidth/>
-            <TextField required placeholder="Enter Email" onChange={handleEmail} id="outlined-required" color="primary" label="Email" style={{marginTop:'20px',marginBottom:'20px',display:'block'}} fullWidth/>
+            <TextField required placeholder="Enter Username" error={errusername} helperText={errusername && 'Kindly enter username'} onChange={handleUsername} id="outlined-required" color="primary" label="Username" style={{marginTop:'20px',marginBottom:'20px',display:'block'}} fullWidth/>
+            <TextField required placeholder="Enter Email" error={erremail} helperText={erremail ? 'Kindly enter valid email':''} onChange={handleEmail} id="outlined-required" color="primary" label="Email" style={{marginTop:'20px',marginBottom:'20px',display:'block'}} fullWidth/>
             <FormControl style={{width:'100%'}} variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password" required>Password</InputLabel>
-                <OutlinedInput placeholder="Enter Password" fullWidth required color="primary" id="outlined-adornment-password" onChange={handleChangePassword} type={showpassword ? 'text' : 'password'}
+                <OutlinedInput placeholder="Enter Password" error={errpassword}  fullWidth required color="primary" id="outlined-adornment-password" onChange={handleChangePassword} type={showpassword ? 'text' : 'password'}
                   value={password} endAdornment={
                 <InputAdornment position="end">
                     <IconButton
@@ -87,10 +131,11 @@ export default function Register() {
                 }
                 label="Password"
                 />
+                {errpassword ? <p className="css-1wc848c-MuiFormHelperText-root" style={{color:'#d32f2f'}}>Kindly enter password</p> : null }
             </FormControl>
             <Box sx={{ m: 1, position: 'relative' }}>
             <Button style={{marginTop:'15px'}} color="success" variant="contained" disabled={loading} onClick={register}>Register</Button>
-                {loading && (
+                {loadingFetch && (
                 <CircularProgress
                     size={24}
                     sx={{
@@ -105,8 +150,7 @@ export default function Register() {
                 )}
             </Box>
             <Link to='login'><Typography style={{textDecoration:'underline',marginTop:'10px',cursor:'pointer'}}variant="subtitle1" color="parimary">Already have an account? login</Typography></Link>
-            { error ? <div style={{color: 'red',marginTop: '10px',fontSize: '20px',fontWeight: '600'}}>{error}</div> : null}
-            
+            { error ? <Validator severity="error" error={error}/> : null}            
             </div>
         </div>
     )

@@ -1,12 +1,10 @@
-import React from 'react'
-import { Typography} from '@mui/material';
+import React, { useState } from 'react'
+import { Snackbar,Alert} from '@mui/material';
 
-export default function Error({error}) {
+export default function Error({error,severity}) {
     return (
         <>
-          <Typography variant="h3" component="div" style={{color:'red',margin:'auto'}}>
-            {error}
-        </Typography>;  
+            <Alert severity={severity}>{error}</Alert>
         </>
     )
 }
