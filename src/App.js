@@ -6,12 +6,13 @@ import Write from "./Pages/Write";
 import Login from "./Pages/Login/Login";
 import Register from "./Pages/Register/Register";
 import Profile from "./Pages/Profile/Profile";
-
-
+import {AuthContext} from "./context/AuthContextProvider";
+import {useContext} from "react";
 
 import { BrowserRouter,Route } from "react-router-dom";
 function App() {
-const user=false;
+  const authContext=useContext(AuthContext)
+const user=authContext.isauth;
   return (
     <div>
       <BrowserRouter>

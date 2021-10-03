@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 import { AppBar,  Box,Avatar, IconButton, ListItemIcon,  Toolbar, Typography ,Button,Menu,MenuItem} from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -9,6 +9,7 @@ import { deepOrange } from '@mui/material/colors';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { Link } from 'react-router-dom';
+import {AuthContext} from '../context/AuthContextProvider';
 const useStyle=makeStyles({
     mainlist:{
         display:'flex',
@@ -33,7 +34,10 @@ const useStyle=makeStyles({
 
 })
 export default function Topbar() {
-    const user=false;
+    const authContext=useContext(AuthContext);
+    const user=authContext.isauth;
+    const islogout=authContext.islogout;
+
     const [anchorEl,setanchorEl]=useState(null);
     const open=Boolean(anchorEl)
     const handleOpen=(e)=>{
@@ -43,6 +47,12 @@ export default function Topbar() {
     const handleClose=(e)=>{
         console.log(e.target)
         setanchorEl(null)
+    }
+    const logout=()=>{
+        window.localStorage.removeItem('id');
+        window.localStorage.removeItem('isauth');
+
+        islogout();
     }
     const classes=useStyle();
     return (
@@ -57,9 +67,7 @@ export default function Topbar() {
                       <Link to="/" style={{textDecoration:'none'}}><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>HOME</Typography></Link>
                       <Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>BLOG</Typography>
                       <Link to="/write" style={{textDecoration:'none'}}><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>WRITE</Typography></Link>
-                      {user ?
-                      <Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>LOGOUT</Typography>
-                       :<><Link to="/register" style={{textDecoration:'none'}}><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>REGISTER</Typography></Link><Link style={{textDecoration:'none'}} to="/login"><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>LOGIN</Typography></Link></>          
+                      {user ? '':<><Link to="/register" style={{textDecoration:'none'}}><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>REGISTER</Typography></Link><Link style={{textDecoration:'none'}} to="/login"><Typography  variant="subheader" className={classes.headers} noWrap component="div" style={{margin:'0px 10px',cursor:'pointer',fontWeight:'bold',color:'#444'}}>LOGIN</Typography></Link></>          
                       }
                 </Box>
                 {user ?
@@ -69,7 +77,7 @@ export default function Topbar() {
                       <ListItemIcon><SettingsRoundedIcon size="small"/></ListItemIcon>
                       <Link to="/profile" style={{textDecoration:'none',color:'inherit'}}>Profile</Link>
                       </MenuItem>
-                      <MenuItem>
+                      <MenuItem onClick={logout}>
                       <ListItemIcon><LogoutRoundedIcon size="small"/></ListItemIcon>
                       Logout
                       </MenuItem>

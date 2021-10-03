@@ -1,12 +1,16 @@
 import { Typography,Box,CircularProgress,TextField,FormControl,InputLabel,OutlinedInput,InputAdornment,IconButton, Button } from '@mui/material'
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link,useHistory} from 'react-router-dom';
 import { green } from '@mui/material/colors';
 import Validator from "../../Error/Error";
+import {AuthContext} from "../../context/AuthContextProvider";
+
 
 export default function Login() {
+    const authContext=useContext(AuthContext)
+    const handleAuth=authContext.handleAuth;
     const [email,setEmail]=useState('');
     const [loading,setLoading]=useState('');
     const [error,setError]=useState('');
@@ -75,9 +79,13 @@ export default function Login() {
             }
             return res.json()
         }).then(data=>{
+            console.log(data.message)
             setLoading(false);
         setLoadingFetch(false);
             if(data.message.username){
+                handleAuth();
+                localStorage.setItem("id", data.message._id)
+                localStorage.setItem("isauth", true)
                 console.log('under')
                 history.push('/')
             }
