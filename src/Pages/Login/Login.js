@@ -86,6 +86,7 @@ export default function Login() {
                 handleAuth();
                 localStorage.setItem("id", data.message._id)
                 localStorage.setItem("isauth", true)
+                localStorage.setItem("userdetails", JSON.stringify(data.message))
                 console.log('under')
                 history.push('/')
             }

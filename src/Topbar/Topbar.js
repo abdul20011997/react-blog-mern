@@ -1,4 +1,4 @@
-import React,{useState,useContext} from 'react'
+import React,{useState,useContext, useEffect} from 'react'
 import { AppBar,  Box,Avatar, IconButton, ListItemIcon,  Toolbar, Typography ,Button,Menu,MenuItem} from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -37,8 +37,8 @@ export default function Topbar() {
     const authContext=useContext(AuthContext);
     const user=authContext.isauth;
     const islogout=authContext.islogout;
-
     const [anchorEl,setanchorEl]=useState(null);
+    const [userdetail,setUserdetail]=useState('');
     const open=Boolean(anchorEl)
     const handleOpen=(e)=>{
         console.log(e.currentTarget)
@@ -51,10 +51,17 @@ export default function Topbar() {
     const logout=()=>{
         window.localStorage.removeItem('id');
         window.localStorage.removeItem('isauth');
+        window.localStorage.removeItem('userdetails');
+
 
         islogout();
     }
     const classes=useStyle();
+    useEffect(()=>{
+        setTimeout(()=>{
+       setUserdetail(JSON.parse(localStorage.getItem('userdetails')))
+        },1000)
+},[user])
     return (
         <>
         <AppBar color="inherit" elevation={1} position="fixed">
@@ -71,7 +78,7 @@ export default function Topbar() {
                       }
                 </Box>
                 {user ?
-                  <><Button style={{marginLeft:'10px',fontWeight:'bold'}} color="secondary" size="large" onClick={handleOpen}>Abdul</Button>
+                  <><Button style={{marginLeft:'10px',fontWeight:'bold'}} color="secondary" size="large" onClick={handleOpen}>{userdetail ? userdetail.username : ''}</Button>
                   <Menu anchorEl={anchorEl} open={open}  onClose={handleClose}>
                       <MenuItem>
                       <ListItemIcon><SettingsRoundedIcon size="small"/></ListItemIcon>
@@ -82,7 +89,7 @@ export default function Topbar() {
                       Logout
                       </MenuItem>
                   </Menu>
-                  <Avatar style={{background:deepOrange[500]}} onClick={handleOpen}>A</Avatar>
+                  <Avatar style={{background:deepOrange[500]}} onClick={handleOpen}>{userdetail ? userdetail.username.charAt(0).toUpperCase() : ''}</Avatar>
                   </>
                   : ''
                 }
