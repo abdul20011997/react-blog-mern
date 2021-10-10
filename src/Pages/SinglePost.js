@@ -11,6 +11,7 @@ export default function SinglePost() {
     const [error,setError]=useState(null);
     const [loading,setLoading]=useState(false);
     const {id}=useParams();
+    const url='http://localhost:4000/images/';
 
     useEffect(() => {
         setLoading(true);
@@ -36,7 +37,8 @@ export default function SinglePost() {
 
         }
         else if(Post){
-            postdata= <><div><img src='/2.jpg' alt="singlepost" style={{width:'100%',height:'500px'}}/></div>
+    const url='http://localhost:4000/images/';
+            postdata= <><div><img src={Post.photo ? url+Post.photo :'/2.jpg'} alt="singlepost" style={{width:'100%',height:'500px'}}/></div>
             <Grid container  style={{marginTop:'10px'}}>
                     <Grid item md={10} xs={10} style={{textAlign:'center'}}>
                         <Typography variant="h4" component="div">{Post.title}</Typography>

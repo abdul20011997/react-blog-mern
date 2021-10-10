@@ -12,7 +12,7 @@ export default function Login() {
     const authContext=useContext(AuthContext)
     const handleAuth=authContext.handleAuth;
     const [email,setEmail]=useState('');
-    const [loading,setLoading]=useState('');
+    const [loading,setLoading]=useState(true);
     const [error,setError]=useState('');
     const history=useHistory();
     const [password,setPassword]=useState('');

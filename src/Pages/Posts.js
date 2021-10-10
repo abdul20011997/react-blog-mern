@@ -6,6 +6,8 @@ import Error from "../Error/Error";
 
 export default function Posts({posts,error,loading}) {
     let postdata='';
+    const url='http://localhost:4000/images/';
+
     if(loading){
         postdata=<Loader/>;
     }
@@ -31,7 +33,7 @@ export default function Posts({posts,error,loading}) {
                         <CardMedia
                             component="img"
                             height="194"
-                            image="./1.jpg"
+                            image={post.photo ? url+post.photo : './1.jpg'}
                             alt="Paella dish"
                         />
                         <CardContent>
